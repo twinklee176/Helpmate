@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HelpMate – Connecting Needs with the Right Help</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤝</text></svg>">
+</head>
+<body>
+
+  <!-- Demo Role Switcher Bar (Lab Viva & Testing) -->
+  <aside class="demo-banner" aria-label="Demo Role Switcher">
+    <div class="demo-label">
+      <span>🚀 <strong>Demo Role Switcher:</strong> Test website across user personas:</span>
+    </div>
+    <div class="demo-roles">
+      <button class="demo-btn active" data-demo="rahul" onclick="App.switchDemoUser('rahul')">
+        👨‍🎓 Rahul (Seeker)
+      </button>
+      <button class="demo-btn" data-demo="priya" onclick="App.switchDemoUser('priya')">
+        👩‍💻 Priya (Top Helper 4.95★)
+      </button>
+      <button class="demo-btn" data-demo="amit" onclick="App.switchDemoUser('amit')">
+        🏃‍♂️ Amit (Volunteer)
+      </button>
+      <button class="demo-btn" data-demo="careindia" onclick="App.switchDemoUser('careindia')">
+        🏢 CareIndia (NGO Org)
+      </button>
+      <button class="demo-btn" data-demo="admin" onclick="App.switchDemoUser('admin')">
+        🛡️ Dr. Admin (Platform Officer)
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Navbar -->
+  <header>
+  <nav class="navbar" aria-label="Main Navigation">
+    <div class="navbar-brand" onclick="App.switchView('requests-view')">
+      <div class="brand-icon">🤝</div>
+      <div>
+        <div class="brand-title">HelpMate</div>
+        <span class="brand-tagline">Connecting Needs with the Right Help</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <ul class="navbar-nav">
+      <li><a class="nav-link active" data-view="requests-view">🔍 Explore Help</a></li>
+      <li><a class="nav-link" data-view="discovery-view">🎯 AI Match & Helpers</a></li>
+      <li><a class="nav-link" data-view="blood-view" style="color:#dc2626; font-weight:700;">🩸 Blood Alert</a></li>
+      <li><a class="nav-link" data-view="ngo-view">🏢 NGO Drives</a></li>
+      <li><a class="nav-link" data-view="resources-view">📦 Resources & Goods</a></li>
+      <li><a class="nav-link" data-view="circles-view">⭕ Help Circles</a></li>
+      <li><a class="nav-link" data-view="dashboard-view">📊 My Dashboard</a></li>
+      <li><a class="nav-link" id="adminNavTab" data-view="admin-view" style="display:none; color:#7e22ce; font-weight:700;">⚙️ Admin Panel</a></li>
+    </ul>
+
+    <!-- Navbar Actions -->
+    <div class="navbar-actions">
+      <!-- Notification Bell -->
+      <div style="position:relative;">
+        <button class="btn btn-secondary btn-sm" onclick="App.toggleNotifDropdown()" style="position:relative; font-size:1rem; padding:6px 10px;">
+          🔔
+          <span id="unreadNotifBadge" class="nav-badge" style="position:absolute; top:-4px; right:-4px; display:none;">0</span>
+        </button>
+
+        <!-- Notifications Dropdown Box -->
+        <div id="notifDropdown" style="display:none; position:absolute; right:0; top:42px; width:320px; background:white; border:1px solid var(--border); border-radius:var(--radius-md); box-shadow:var(--shadow-lg); z-index:200;">
+          <div style="padding:10px 14px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:0.85rem; color:#0f172a;">Notifications</strong>
+            <span style="font-size:0.75rem; color:#2563eb; cursor:pointer;" onclick="App.toggleNotifDropdown()">Close</span>
+          </div>
+          <div id="notifDropdownList" style="max-height:300px; overflow-y:auto;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Current User Profile Pill -->
+      <div style="display:flex; align-items:center; gap:8px; background:#f8fafc; border:1px solid var(--border); padding:4px 10px; border-radius:var(--radius-full); cursor:pointer;" onclick="App.switchView('dashboard-view')">
+        <span id="navUserAvatar" style="font-size:1.1rem;">👤</span>
+        <div style="line-height:1.2;">
+          <div id="navUserName" style="font-size:0.82rem; font-weight:700; color:#0f172a;">Rahul Sharma</div>
+          <div id="navUserRole" style="font-size:0.68rem; color:#64748b; font-weight:600;">SEEKER</div>
+        </div>
+      </div>
+
+      <!-- Post Request Primary Button -->
+      <button class="btn btn-primary btn-sm" onclick="App.openCreateRequestModal()">
+        + Post Request
+      </button>
+    </div>
+  </nav>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Organized Non-Monetary Community Assistance</h1>
+        <p>Connecting people seeking academic, daily life, emergency blood, and community support with verified helpers, volunteers, and NGOs.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div id="heroStatUsers" class="stat-num">5</div>
+          <div class="stat-label">Community Users</div>
+        </div>
+        <div class="stat-item">
+          <div id="heroStatRequests" class="stat-num">6</div>
+          <div class="stat-label">Help Requests</div>
+        </div>
+        <div class="stat-item">
+          <div id="heroStatResolved" class="stat-num">95%</div>
+          <div class="stat-label">Match & Resolution</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- ============================================================== -->
+    <!-- VIEW 1: HELP REQUESTS EXPLORER (Modules 1, 2, 3) -->
+    <!-- ============================================================== -->
+    <section id="requests-view" class="view-section active-view">
+      <!-- 5 Sector Navigation Pills -->
+      <div class="sector-pills">
+        <button class="sector-pill active" data-sector="All">🌐 All 5 Sectors</button>
+        <button class="sector-pill" data-sector="Education & Skill Development">🎓 Education & Skill Development</button>
+        <button class="sector-pill" data-sector="Personal & Daily-Life Assistance">🏡 Personal & Daily-Life Help</button>
+        <button class="sector-pill" data-sector="Community Assistance">🤝 Community Assistance</button>
+        <button class="sector-pill" data-sector="NGO & Volunteering">🏢 NGO & Volunteering</button>
+        <button class="sector-pill" data-sector="Donation & Resource Assistance">🎁 Donation & Resources</button>
+      </div>
+
+      <!-- Filter & Search Toolbar -->
+      <div class="toolbar-card">
+        <div class="search-input-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="requestSearchInput" placeholder="Search by title, description, or required skills (e.g. Python, Elderly Care)...">
+        </div>
+        <div>
+          <select id="urgencyFilterSelect" class="filter-select">
+            <option value="All">All Urgency Levels</option>
+            <option value="Critical">🚨 Critical</option>
+            <option value="Urgent">⚡ Urgent</option>
+            <option value="Normal">Normal</option>
+          </select>
+        </div>
+        <div>
+          <input type="text" id="cityFilterInput" class="filter-select" placeholder="Filter by City / Locality">
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="App.openCreateRequestModal()">
+          + Post Request
+        </button>
+      </div>
+
+      <!-- Requests Grid -->
+      <div id="requestsGrid" class="cards-grid">
+        <!-- Rendered dynamically by App.loadRequests() -->
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 2: AI MATCH & HELPER DISCOVERY (Module 3) -->
+    <!-- ============================================================== -->
+    <section id="discovery-view" class="view-section">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-size:1.5rem; color:#0f172a; margin-bottom:4px;">🎯 Multi-Factor Matching & Discovery Feed</h2>
+        <p style="color:#64748b; font-size:0.95rem;">
+          Our algorithm evaluates requests against helper skills (35%), availability alignment (25%), geographic radius (20%), and trust score (20%).
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+        <!-- Left: Personalized Request Recommendations -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:1.15rem; color:#1e293b; font-weight:700;">⚡ Recommended Requests for You</h3>
+            <span style="font-size:0.8rem; color:#10b981; font-weight:600;">Tailored to your skills</span>
+          </div>
+          <div id="recommendationsGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Right: Top Verified Community Helpers -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:1.15rem; color:#1e293b; font-weight:700;">🌟 Top Community Helpers & Tutors</h3>
+            <span style="font-size:0.8rem; color:#64748b;">Ranked by Reliability</span>
+          </div>
+          <div id="topHelpersList" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 3: URGENT BLOOD DONATION (Module 4) -->
+    <!-- ============================================================== -->
+    <section id="blood-view" class="view-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px; background:#fef2f2; border:1px solid #fecaca; padding:18px 24px; border-radius:12px;">
+        <div>
+          <h2 style="font-size:1.4rem; color:#991b1b; display:flex; align-items:center; gap:8px;">
+            🩸 Urgent Blood Requirement Lifeline
+          </h2>
+          <p style="color:#7f1d1d; font-size:0.9rem;">
+            Emergency blood and platelet requests from verified patients in local hospitals. Non-monetary voluntary assistance.
+          </p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <select id="bloodGroupFilter" class="filter-select" onchange="App.loadBloodRequests()">
+            <option value="All">All Blood Groups</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O- (Universal)</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+          <button class="btn btn-danger" onclick="App.openCreateBloodModal()">
+            + Post Urgent Blood Request
+          </button>
+        </div>
+      </div>
+
+      <div id="bloodRequestsList">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 4: NGO DRIVES & VOLUNTEERING (Module 4) -->
+    <!-- ============================================================== -->
+    <section id="ngo-view" class="view-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h2 style="font-size:1.5rem; color:#0f172a;">🏢 NGO Initiatives & Volunteer Drives</h2>
+          <p style="color:#64748b; font-size:0.95rem;">Join verified NGO social initiatives, slum education drives, tree plantations, and community relief.</p>
+        </div>
+      </div>
+
+      <div id="ngoOpportunitiesGrid" class="cards-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 5: RESOURCES & GOODS DONATION (Module 4) -->
+    <!-- ============================================================== -->
+    <section id="resources-view" class="view-section">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div>
+          <h2 style="font-size:1.5rem; color:#0f172a;">📦 Resource & Goods Donation Hub</h2>
+          <p style="color:#64748b; font-size:0.95rem;">Non-monetary donation of study textbooks, clothing, medical mobility aids, and essential supplies.</p>
+        </div>
+        <button class="btn btn-primary" onclick="App.openCreateResourceModal()">
+          + Offer / Request Resource
+        </button>
+      </div>
+
+      <div id="resourcesGrid" class="cards-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 6: HELP CIRCLES (Module 5) -->
+    <!-- ============================================================== -->
+    <section id="circles-view" class="view-section">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-size:1.5rem; color:#0f172a;">⭕ Help Circles (Collaborative Teams)</h2>
+        <p style="color:#64748b; font-size:0.95rem;">Collaborative volunteer circles formed to tackle complex, multi-person community assistance tasks.</p>
+      </div>
+
+      <div id="circlesGrid" class="cards-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 7: MY DASHBOARD & USER PROFILE (Module 1, 5, 6) -->
+    <!-- ============================================================== -->
+    <section id="dashboard-view" class="view-section">
+      <!-- Profile Header Card -->
+      <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; margin-bottom:24px; box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; gap:16px; align-items:center;">
+          <div style="width:72px; height:72px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-size:2.5rem;">
+            👤
+          </div>
+          <div>
+            <h2 id="dashUserName" style="font-size:1.4rem; color:#0f172a; margin-bottom:2px;">User Profile</h2>
+            <p id="dashUserBio" style="color:#64748b; font-size:0.88rem; max-width:550px; margin-bottom:6px;"></p>
+            <div style="font-size:0.8rem; color:#475569;">📍 <span id="dashLocation"></span></div>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px;">
+          <div style="text-align:center; padding:10px 18px; background:#ecfdf5; border-radius:10px; border:1px solid #a7f3d0;">
+            <div id="dashTrustScore" style="font-size:1.4rem; font-weight:800; color:#065f46;">98%</div>
+            <div style="font-size:0.75rem; color:#047857; font-weight:600;">Reliability Score</div>
+          </div>
+          <div style="text-align:center; padding:10px 18px; background:#fefce8; border-radius:10px; border:1px solid #fde047;">
+            <div id="dashRatingAvg" style="font-size:1.4rem; font-weight:800; color:#854d0e;">4.9 ★</div>
+            <div style="font-size:0.75rem; color:#a16207; font-weight:600;">Community Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+        <!-- Left: Skills & Availability -->
+        <div>
+          <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:20px;">
+            <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">🛠️ Offered Skills & Proficiency</h3>
+            <div id="dashSkillsList" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px;">
+            <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">⏰ Availability & Preferred Time Slots</h3>
+            <div id="dashAvailabilityList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: My Requests & Feedback -->
+        <div>
+          <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:20px;">
+            <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">📋 My Posted Requests</h3>
+            <div id="dashMyRequestsList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px;">
+            <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">⭐ Feedback & Ratings Received</h3>
+            <div id="dashReviewsList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 8: ADMIN CONTROL PANEL & COMMUNITY ANALYTICS (Module 6) -->
+    <!-- ============================================================== -->
+    <section id="admin-view" class="view-section">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-size:1.5rem; color:#0f172a;">⚙️ Platform Administration & Community Analytics</h2>
+        <p style="color:#64748b; font-size:0.95rem;">System overview, NGO verification queue, moderation, and community impact indicators.</p>
+      </div>
+
+      <!-- Admin KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#e0f2fe; color:#0284c7;">👥</div>
+          <div class="kpi-info">
+            <h4 id="admTotalUsers">5</h4>
+            <p>Registered Users</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#fef3c7; color:#d97706;">📋</div>
+          <div class="kpi-info">
+            <h4 id="admTotalRequests">6</h4>
+            <p>Total Help Requests</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#dcfce7; color:#16a34a;">🎯</div>
+          <div class="kpi-info">
+            <h4 id="admResolutionRate">96%</h4>
+            <p>Resolution Rate</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#fee2e2; color:#dc2626;">🩸</div>
+          <div class="kpi-info">
+            <h4 id="admBloodPledges">2</h4>
+            <p>Blood Pledges Made</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:#f3e8ff; color:#9333ea;">⚖️</div>
+          <div class="kpi-info">
+            <h4 id="admPendingDisputes">0</h4>
+            <p>Active Disputes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:24px;">
+        <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px;">
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">📊 Assistance Requests Across 5 Sectors</h3>
+          <div id="adminSectorChart">
+            <!-- Native SVG Doughnut Chart -->
+          </div>
+        </div>
+        <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; display:flex; flex-direction:column; justify-content:center;">
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700; text-align:center;">🏆 Community Resolution Index</h3>
+          <div id="adminSuccessGauge">
+            <!-- Native Gauge -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Queues (NGO Verification + Safety Disputes) -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+        <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px;">
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">🏢 NGO Verification Queue</h3>
+          <div id="adminNgoQueue">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div style="background:white; border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px;">
+          <h3 style="font-size:1.1rem; color:#0f172a; margin-bottom:12px; font-weight:700;">🛡️ Reports & Disputes Queue</h3>
+          <div id="adminDisputesQueue">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- MODALS -->
+  <!-- ============================================================== -->
+
+  <!-- 1. Create Help Request Modal -->
+  <div id="createRequestModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create New Community Help Request</h3>
+        <button class="modal-close" onclick="closeModal('createRequestModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitHelpRequest(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Request Title *</label>
+            <input type="text" name="title" class="form-control" placeholder="e.g. Need tutoring with Python Binary Trees" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Assistance Sector *</label>
+              <select name="sector" class="form-control" required>
+                <option value="Education & Skill Development">Education & Skill Development</option>
+                <option value="Personal & Daily-Life Assistance">Personal & Daily-Life Assistance</option>
+                <option value="Community Assistance">Community Assistance</option>
+                <option value="NGO & Volunteering">NGO & Volunteering</option>
+                <option value="Donation & Resource Assistance">Donation & Resource Assistance</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Urgency Level *</label>
+              <select name="urgency" class="form-control">
+                <option value="Normal">Normal</option>
+                <option value="Urgent">⚡ Urgent</option>
+                <option value="Critical">🚨 Critical</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Detailed Description *</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="Explain what kind of assistance you need and any specific requirements..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Required Skills (comma-separated)</label>
+            <input type="text" name="required_skills" class="form-control" placeholder="e.g. Python Programming, Data Structures, Elderly Care">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Preferred Date & Time</label>
+              <input type="text" name="date_time" class="form-control" placeholder="e.g. Tomorrow 4:00 PM / Weekends">
+            </div>
+            <div class="form-group">
+              <label>Estimated Duration</label>
+              <input type="text" name="duration" class="form-control" placeholder="e.g. 2 hours">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" name="city" class="form-control" value="New Delhi" required>
+            </div>
+            <div class="form-group">
+              <label>Neighborhood / Area *</label>
+              <input type="text" name="area" class="form-control" value="Sector 14, Rohini" required>
+            </div>
+          </div>
+
+          <div class="form-row" style="align-items:center;">
+            <div class="form-group">
+              <label>Helpers Needed</label>
+              <input type="number" name="helpers_needed" class="form-control" value="1" min="1" max="10">
+            </div>
+            <div class="form-group" style="padding-top:22px;">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="is_remote" value="1">
+                <span>Can be done Remotely / Online</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createRequestModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Request Details & Offers Modal -->
+  <div id="requestDetailsModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:680px;">
+      <div class="modal-header">
+        <h3>Assistance Request Details</h3>
+        <button class="modal-close" onclick="closeModal('requestDetailsModal')">&times;</button>
+      </div>
+      <div id="requestDetailsModalBody" class="modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Offer Help Modal -->
+  <div id="offerHelpModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="offerModalRequestTitle">Offer Community Assistance</h3>
+        <button class="modal-close" onclick="closeModal('offerHelpModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitHelpOffer(event)">
+        <input type="hidden" id="offerModalRequestId" name="requestId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Message to Requester *</label>
+            <textarea name="message" class="form-control" rows="3" placeholder="Introduce yourself, your experience, and when you can help..." required></textarea>
+          </div>
+          <p style="font-size:0.8rem; color:#64748b;">
+            💡 Your verified profile skills, ratings, and active availability slots will be automatically evaluated by HelpMate's Multi-Factor Matching Algorithm.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('offerHelpModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Offer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Transparent Multi-Factor Explainability Breakdown Modal -->
+  <div id="explainModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:540px;">
+      <div class="modal-header">
+        <h3>Explainable Recommendation</h3>
+        <button class="modal-close" onclick="closeModal('explainModal')">&times;</button>
+      </div>
+      <div id="explainModalBody" class="modal-body">
+        <!-- Rendered by window.MatchingEngine -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" onclick="closeModal('explainModal')">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. In-App Chat Modal -->
+  <div id="chatModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.2rem;">💬</span>
+          <div>
+            <h3 style="font-size:1rem;" id="chatRecipientName">Chat Channel</h3>
+            <span style="font-size:0.7rem; color:#10b981;">Online • Request Coordination</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal('chatModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="chat-container">
+          <div id="chatHistory" class="chat-history">
+            <!-- Messages rendered dynamically -->
+          </div>
+          <form onsubmit="App.sendChatMessage(event)" class="chat-input-bar">
+            <input type="text" id="chatMessageInput" class="form-control" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Review & Rating Modal -->
+  <div id="reviewModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:480px;">
+      <div class="modal-header">
+        <h3>Rate Assistance & Leave Feedback</h3>
+        <button class="modal-close" onclick="closeModal('reviewModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitReview(event)">
+        <input type="hidden" id="reviewRequestId" name="requestId">
+        <input type="hidden" id="reviewRevieweeId" name="revieweeId">
+        <div class="modal-body" style="text-align:center;">
+          <p style="color:#64748b; font-size:0.9rem; margin-bottom:12px;">
+            How was your experience with this community helper?
+          </p>
+          <div class="star-rating star-picker" style="justify-content:center; margin-bottom:18px;">
+            <span class="star active" data-val="1">★</span>
+            <span class="star active" data-val="2">★</span>
+            <span class="star active" data-val="3">★</span>
+            <span class="star active" data-val="4">★</span>
+            <span class="star active" data-val="5">★</span>
+          </div>
+          <div class="form-group" style="text-align:left;">
+            <label>Feedback & Recommendation</label>
+            <textarea name="feedback" class="form-control" rows="3" placeholder="Share specific details about their punctuality, skill, and helpfulness..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reviewModal')">Skip</button>
+          <button type="submit" class="btn btn-success">Submit Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. Emergency Blood Request Modal -->
+  <div id="createBloodModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header" style="background:#fef2f2;">
+        <h3 style="color:#991b1b;">🩸 Post Urgent Blood Requirement</h3>
+        <button class="modal-close" onclick="closeModal('createBloodModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitBloodRequest(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Patient Name *</label>
+              <input type="text" name="patient_name" class="form-control" placeholder="Patient's Full Name" required>
+            </div>
+            <div class="form-group">
+              <label>Blood Group *</label>
+              <select name="blood_group" class="form-control" required>
+                <option value="B+">B+</option>
+                <option value="O+">O+</option>
+                <option value="A+">A+</option>
+                <option value="AB+">AB+</option>
+                <option value="O-">O- (Universal)</option>
+                <option value="A-">A-</option>
+                <option value="B-">B-</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Hospital & Branch *</label>
+              <input type="text" name="hospital_name" class="form-control" placeholder="e.g. AIIMS Delhi / Max Hospital" required>
+            </div>
+            <div class="form-group">
+              <label>Units Needed</label>
+              <input type="number" name="units_needed" class="form-control" value="1" min="1" max="10">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" name="city" class="form-control" value="New Delhi" required>
+            </div>
+            <div class="form-group">
+              <label>Area / Locality *</label>
+              <input type="text" name="area" class="form-control" value="Shalimar Bagh" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Urgency Level *</label>
+              <select name="urgency" class="form-control">
+                <option value="Immediate / Critical">🚨 Immediate / Critical</option>
+                <option value="Within 24 Hours">⚡ Within 24 Hours</option>
+                <option value="Scheduled">Scheduled</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Emergency Contact Phone *</label>
+              <input type="text" name="contact_phone" class="form-control" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createBloodModal')">Cancel</button>
+          <button type="submit" class="btn btn-danger">Broadcast Blood Alert</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. Blood Pledge Modal -->
+  <div id="bloodPledgeModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:460px;">
+      <div class="modal-header">
+        <h3 id="bloodPledgeTitle">Pledge Blood Donation</h3>
+        <button class="modal-close" onclick="closeModal('bloodPledgeModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitBloodPledge(event)">
+        <input type="hidden" id="bloodPledgeRequestId" name="requestId">
+        <div class="modal-body">
+          <p style="font-size:0.88rem; color:#334155; margin-bottom:12px;">
+            By pledging, your contact information will be shared with the patient's family so they can coordinate hospital arrival.
+          </p>
+          <div class="form-group">
+            <label>Notes / Availability to reach hospital</label>
+            <input type="text" name="note" class="form-control" value="I am ready to donate blood and can reach within 2 hours.">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('bloodPledgeModal')">Cancel</button>
+          <button type="submit" class="btn btn-danger">Confirm Blood Pledge ❤️</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 9. Create Resource Modal -->
+  <div id="createResourceModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Post Community Resource Donation / Need</h3>
+        <button class="modal-close" onclick="closeModal('createResourceModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitResourceItem(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Type *</label>
+              <select name="type" class="form-control" required>
+                <option value="Offer">🎁 Offering / Donating</option>
+                <option value="Need">🙏 Requesting / Need</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select name="category" class="form-control" required>
+                <option value="Study Materials & Books">Study Materials & Books</option>
+                <option value="Food & Meals">Food & Meals</option>
+                <option value="Clothing & Blankets">Clothing & Blankets</option>
+                <option value="Medical & Mobility Aids">Medical & Mobility Aids</option>
+                <option value="Electronics & Tools">Electronics & Tools</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Item Title *</label>
+            <input type="text" name="title" class="form-control" placeholder="e.g. Set of B.Tech CSE Semester 1-4 Textbooks" required>
+          </div>
+          <div class="form-group">
+            <label>Item Description *</label>
+            <textarea name="description" class="form-control" rows="2" placeholder="Describe the item condition, edition, or details..." required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Condition</label>
+              <select name="item_condition" class="form-control">
+                <option value="Like New">Like New</option>
+                <option value="Good">Good</option>
+                <option value="Fair">Fair</option>
+                <option value="New">Brand New</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="text" name="quantity" class="form-control" value="1 item">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" name="city" class="form-control" value="New Delhi" required>
+            </div>
+            <div class="form-group">
+              <label>Area / Locality *</label>
+              <input type="text" name="area" class="form-control" value="Sector 15, Rohini" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createResourceModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Resource</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 10. Add Skill Modal -->
+  <div id="addSkillModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:440px;">
+      <div class="modal-header">
+        <h3>Add Skill to Your Profile</h3>
+        <button class="modal-close" onclick="closeModal('addSkillModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitAddSkill(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Skill Name *</label>
+            <input type="text" name="skill_name" class="form-control" placeholder="e.g. Python Programming, First Aid, Math" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Proficiency</label>
+              <select name="proficiency" class="form-control">
+                <option value="Intermediate">Intermediate</option>
+                <option value="Expert">Expert</option>
+                <option value="Beginner">Beginner</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Years of Exp</label>
+              <input type="number" name="experience_years" class="form-control" value="2" min="1" max="50">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addSkillModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Skill</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 11. Add Availability Slot Modal -->
+  <div id="addAvailModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:440px;">
+      <div class="modal-header">
+        <h3>Add Availability Schedule</h3>
+        <button class="modal-close" onclick="closeModal('addAvailModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitAddAvailability(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Day of Week *</label>
+            <select name="day_of_week" class="form-control">
+              <option value="Saturday">Saturday</option>
+              <option value="Sunday">Sunday</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="All Weekdays">All Weekdays</option>
+              <option value="Weekends">Weekends</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Time Slot *</label>
+            <select name="time_slot" class="form-control">
+              <option value="Morning">Morning (8 AM - 12 PM)</option>
+              <option value="Afternoon">Afternoon (12 PM - 5 PM)</option>
+              <option value="Evening">Evening (5 PM - 9 PM)</option>
+              <option value="Flexible">Flexible / On Call</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Preferred Duration</label>
+            <input type="text" name="preferred_duration" class="form-control" value="1-2 hours">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addAvailModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Slot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 12. Safety Report Modal -->
+  <div id="reportModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:480px;">
+      <div class="modal-header">
+        <h3>Report User / Assistance Concern</h3>
+        <button class="modal-close" onclick="closeModal('reportModal')">&times;</button>
+      </div>
+      <form onsubmit="App.submitReport(event)">
+        <input type="hidden" id="reportTargetUserId" name="reportedUserId">
+        <input type="hidden" id="reportRequestId" name="requestId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Violation Category *</label>
+            <select name="category" class="form-control">
+              <option value="No Show / Cancellation">No Show / Cancellation</option>
+              <option value="Inappropriate Behavior">Inappropriate Behavior</option>
+              <option value="Misleading Information">Misleading Information</option>
+              <option value="Spam / Commercial Request">Spam / Commercial Request</option>
+              <option value="Safety Violation">Safety Violation</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Details & Explanation *</label>
+            <textarea name="details" class="form-control" rows="3" placeholder="Explain the incident for the admin trust & safety team..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reportModal')">Cancel</button>
+          <button type="submit" class="btn btn-danger">Submit Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/matching.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
