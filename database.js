@@ -293,12 +293,25 @@ function seedDefaultData() {
   const adminPassword = hashPassword('admin123');
 
   // Insert Default Users
-  // 1. Rahul Sharma (Student / Seeker)
-  const insertUser = db.prepare(`
-    INSERT INTO users (name, email, password_hash, role, bio, phone, avatar, city, area, radius_km, is_verified, reliability_score, rating_avg, rating_count)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
+  // 1. Alex Johnson / Rahul Sharma (Active User / Seeker)
+  insertUser.run(
+    'Alex Johnson',
+    'alex@example.com',
+    defaultPassword,
+    'user',
+    'Curious learner and active community contributor passionate about tutoring and neighborhood assistance.',
+    '+91 98765 43210',
+    'AJ',
+    'Bengaluru',
+    'Koramangala',
+    10,
+    1,
+    95.0,
+    4.9,
+    14
+  );
 
+  // 1b. Rahul Sharma alias
   insertUser.run(
     'Rahul Sharma',
     'rahul@example.com',
@@ -306,9 +319,9 @@ function seedDefaultData() {
     'user',
     'Computer Science 3rd year student seeking academic tutoring and community guidance.',
     '+91 98765 43210',
-    '👨‍🎓',
-    'New Delhi',
-    'Sector 14, Rohini',
+    'RS',
+    'Bengaluru',
+    'Koramangala',
     10,
     1,
     92.5,
@@ -443,6 +456,55 @@ function seedDefaultData() {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
+  // Seeded Requests matching UI 03 & Sprints
+  insertRequest.run(
+    4,
+    'Programming Mentor Needed',
+    'Help a curious student take their first steps in Python and build something meaningful. Mentorship and foundational coding guidance.',
+    'Education & Skill Development',
+    'Python, Mentoring',
+    'Normal',
+    'Nov 21–22 • Flexible',
+    '2 hrs',
+    'Bengaluru',
+    'Koramangala • 2.4 km away',
+    1,
+    1,
+    'Open'
+  );
+
+  insertRequest.run(
+    3,
+    'Community Clean-up Drive',
+    'Join your neighbours for a cleaner, greener weekend at the beautiful Lakeside Park. Tools and safety gloves provided.',
+    'Community Assistance',
+    'Teamwork, Community',
+    'Normal',
+    'Sun, Nov 22 • 7:00–10:00 AM',
+    '3 hrs',
+    'Bengaluru',
+    'HSR Layout • 3.1 km away',
+    0,
+    10,
+    'Open'
+  );
+
+  insertRequest.run(
+    4,
+    'Weekend Teaching Volunteer',
+    'Make learning a little brighter. Teach basic English and maths to children aged 8–12.',
+    'NGO & Volunteering',
+    'Teaching, Communication',
+    'Normal',
+    'Sat, Nov 21 • 10:00 AM–1:00 PM',
+    '3 hrs',
+    'Bengaluru',
+    'Indiranagar • 4.8 km away',
+    0,
+    5,
+    'Open'
+  );
+
   // Sector 1: Education & Skill Development
   insertRequest.run(
     1,
@@ -453,8 +515,8 @@ function seedDefaultData() {
     'Urgent',
     'Tomorrow at 4:00 PM',
     '2 hours',
-    'New Delhi',
-    'Sector 14, Rohini',
+    'Bengaluru',
+    'Koramangala',
     1,
     1,
     'Open'
